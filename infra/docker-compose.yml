@@ -1,48 +1,61 @@
-version: '3.3'
+version: '3'
 
 volumes:
   pg_data:
   static_data:
+  frontend:
   media_data:
+  redoc:
 
 services:
 
   db:
     image: postgres:13.10
     env_file:
-      - ./.env
+      - .env
     volumes:
       - pg_data:/var/lib/postgresql/data/
 
   backend:
-    image: danilkas/foodgram_backend
+    # image: danilkas/foodgram_backend
+    build:
+      context: ../backend/
+      dockerfile: Dockerfile
     env_file:
-      - ./.env 
-    ports:
-      - "8000:8000"
+      - .env 
+    volumes:
+      - static_data:/app/backend_static/
+      - redoc:/app/docs
+      - media_data:/app/media
     depends_on:
       - db
-    volumes:
-      - static_data:/static/
-      - media_data:/media/
 
   frontend:
-    image: danilkas/foodgram_frontend
+    # image: danilkas/foodgram_frontend
+    # build: ./frontend/
+    build:
+      context: ../frontend/
+      dockerfile: Dockerfile
     volumes:
-      - ../frontend/:/app/result_build/
+      - frontend:/app/build/
     depends_on:
       - backend 
 
   nginx:
     image: nginx:1.19.3
+    # build: ./infra/
+    build:
+      context: ../infra/
+      dockerfile: Dockerfile
     ports:
       - "80:80"
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ../frontend/build:/usr/share/nginx/html/
-      - ../docs/:/usr/share/nginx/html/api/docs/
-      - static_data:/var/html/static/
-      - media_data:/var/html/media/
+      - frontend:/usr/share/nginx/html/
+      - redoc:/usr/share/nginx/html/api/docs/
+      - static_data:/var/html/static
+      - media_data:/var/html/media
+      # - media_data:/media
+      # - static_data:/staticfiles/
     depends_on:
       - frontend     
       - backend
