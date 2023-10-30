@@ -1,7 +1,5 @@
-# from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models
 from django.contrib.auth.models import AbstractUser
-# from foodgram_backend.foodgram.models import Recipes
+from django.db import models
 
 
 class User(AbstractUser):
@@ -11,7 +9,6 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "first_name", "last_name"]
     username = models.CharField(
-        # validators=(validate_username_own,),
         verbose_name="Пользователь",
         max_length=150,
         unique=True,
