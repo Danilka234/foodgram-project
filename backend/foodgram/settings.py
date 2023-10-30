@@ -10,7 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
+import os
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +25,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!95&6z2x^2&tl_5o-)jm(@pwtk=k1sb&hri^f^=s$q$v5q$us-'
+# SECRET_KEY = 'django-insecure-!95&6z2x^2&tl_5o-)jm(@pwtk=k1sb&hri^f^=s$q$v5q$us-'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', "localhost", "kittygram-test.hopto.org", "backend"]
+# ALLOWED_HOSTS = ["130.193.53.157", "localhost", "tasty-foodgram.hopto.org", "127.0.0.1"]
 
+SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret')
+
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
+
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'https://tasty-foodgram.hopto.org/').split(',')
+
+CSRF_COOKIE_SECURE = True
+
+CSRF_TRUSTED_ORIGINS = ['https://tasty-foodgram.hopto.org/',
+                        'http://138.193.53.157/',
+                        'https://%2A.hopto.org/']
 
 # Application definition
 

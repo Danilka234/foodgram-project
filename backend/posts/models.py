@@ -8,7 +8,7 @@ class Tags(models.Model):
         verbose_name="Название тэга",
         max_length=70,
         unique=True
-        )
+    )
     slug = models.SlugField(
         verbose_name="slug",
         unique=True)
@@ -22,7 +22,7 @@ class Tags(models.Model):
         ordering = ("name", )
         verbose_name = "Тэг"
         verbose_name_plural = "Тэги"
-    
+
     def __str__(self) -> str:
         return self.name
 
@@ -57,11 +57,11 @@ class Recipes(models.Model):
     name = models.CharField(
         verbose_name="Название рецепта",
         max_length=210
-        )
+    )
     description = models.CharField(
         verbose_name="Описание",
         max_length=300
-        )
+    )
     tags = models.ManyToManyField(
         Tags,
         related_name="tag",
@@ -78,21 +78,21 @@ class Recipes(models.Model):
     )
     image = models.ImageField(
         verbose_name="Изображение блюда",
-        upload_to="recipe/",
-        default=None
+        upload_to="recipe/"
     )
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name="Время приготовления",
         default=1
     )
+
     class Meta:
         ordering = ("-pub_date", )
         verbose_name = "Рецепт"
         verbose_name_plural = "Рецепты"
-    
+
     def __str__(self) -> str:
         return self.name
-    
+
 
 class AmountOfIngridient(models.Model):
     """Модель кол-ва ингридинтов в описанном рецепте."""
@@ -112,11 +112,12 @@ class AmountOfIngridient(models.Model):
         verbose_name="Кол-во ингридиента",
         default=1
     )
+
     class Meta:
         ordering = ("recipe", )
         verbose_name = "Кол-во ингридиента"
         verbose_name_plural = "Кол-во ингридиентов"
-    
+
     def __str__(self) -> str:
         return f"{self.ingredient} {self.amount}"
 
@@ -131,7 +132,7 @@ class Favorite(models.Model):
         on_delete=models.CASCADE,
         related_name="favorite_recipe",
         verbose_name="Понравившийся рецепт")
-    
+
     class Meta:
         verbose_name = "Понравившийся рецепт"
         verbose_name_plural = "Понравившиеся рецепты"
@@ -139,7 +140,7 @@ class Favorite(models.Model):
             models.UniqueConstraint(fields=["user", "recipe"],
                                     name="unique_favorite"),
         ]
-    
+
     def __str__(self) -> str:
         return f"{self.user} {self.recipe}"
 
@@ -163,7 +164,7 @@ class Subscribe(models.Model):
 
     def __str__(self) -> str:
         return f"{self.user} {self.author}"
-    
+
 
 class ShoppingList(models.Model):
     user = models.ForeignKey(

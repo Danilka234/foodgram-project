@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from django.urls import path, include, re_path
+from django.urls import path, include
 from .views import (UsersViewSet,
                     IngredientViewSet,
                     TagViewSet,
@@ -20,4 +20,3 @@ urlpatterns = [
     # path('', include('djoser.urls')),
     path('auth/', include("djoser.urls.authtoken")),
 ]
-

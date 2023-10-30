@@ -19,7 +19,7 @@ services:
   backend:
     # image: danilkas/foodgram_backend
     build:
-      context: ../backend/
+      context: ./backend/
       dockerfile: Dockerfile
     env_file:
       - .env 
@@ -34,7 +34,7 @@ services:
     # image: danilkas/foodgram_frontend
     # build: ./frontend/
     build:
-      context: ../frontend/
+      context: ./frontend/
       dockerfile: Dockerfile
     volumes:
       - frontend:/app/build/
@@ -42,13 +42,13 @@ services:
       - backend 
 
   nginx:
-    image: nginx:1.19.3
+    # image: nginx:1.19.3
     # build: ./infra/
     build:
-      context: ../infra/
+      context: ./infra/
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "8000:80"
     volumes:
       - frontend:/usr/share/nginx/html/
       - redoc:/usr/share/nginx/html/api/docs/
