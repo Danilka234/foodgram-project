@@ -1,19 +1,16 @@
 import base64
 
 import webcolors
-
-from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
 from django.core.files.base import ContentFile
 from django.db.models import F
 from djoser.serializers import UserCreateSerializer, UserSerializer
+from posts.models import (AmountOfIngridient, Favorite, Ingredients, Recipes,
+                          ShoppingList, Subscribe, Tags)
+from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
+from users.models import User
 
 from .validators import ValidationTagIngredient
-from users.models import User
-from posts.models import (Recipes, Tags, Ingredients,
-                          Subscribe, Favorite,
-                          AmountOfIngridient,
-                          ShoppingList)
 
 
 class CreateUserSerializer(UserCreateSerializer):

@@ -1,5 +1,5 @@
-from posts.models import Tags
 from django.core.exceptions import ValidationError
+from posts.models import Tags
 
 
 class ValidationTagIngredient:
