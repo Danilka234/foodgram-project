@@ -19,7 +19,6 @@ class Tags(models.Model):
     )
 
     class Meta:
-        ordering = ("name", )
         verbose_name = "Тэг"
         verbose_name_plural = "Тэги"
 
