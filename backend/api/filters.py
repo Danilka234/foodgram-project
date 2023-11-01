@@ -3,6 +3,7 @@ from posts.models import Ingredients, Recipes, Tags
 
 
 class IngredientFilter(FilterSet):
+    """Фильтры для ингредиентов."""
     name = filters.CharFilter(lookup_expr='startswith')
 
     class Meta:
@@ -11,6 +12,7 @@ class IngredientFilter(FilterSet):
 
 
 class RecipeFilter(FilterSet):
+    """Фильтры для рецептов."""
 
     tags = filters.ModelMultipleChoiceFilter(
         field_name='tags__slug',

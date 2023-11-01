@@ -21,11 +21,14 @@ from .serializers import (IngredientSerializer, RecipesListSerializer,
 
 
 class UsersViewSet(UserViewSet):
-    """Получение информации, поиск и редактирование
-    пользователей."""
+    """Получение информации, поиск, редактирование
+    пользователей и подписки для пользователей."""
     pagination_class = CustomPagination
 
     def get_permissions(self):
+        """
+        Переопределение пермишена для анонима на endpoint 'api/users/me/'
+        """
         if self.action == "me":
             self.permission_classes = (permissions.IsAuthenticated, )
         return super().get_permissions()
@@ -37,6 +40,11 @@ class UsersViewSet(UserViewSet):
         permission_classes=[permissions.IsAuthenticated],
     )
     def subscribe(self, request, id):
+        """Подписка для пользователей.
+        Пример endpoint:
+            api/users/2/subscribe/
+            2 = pk пользователя.
+        """
         author = get_object_or_404(User, id=id)
         subscription = Subscribe.objects.filter(
             user=request.user,
@@ -71,6 +79,10 @@ class UsersViewSet(UserViewSet):
         permission_classes=[permissions.IsAuthenticated],
     )
     def subscriptions(self, request):
+        """Список подписок пользователя.
+        Пример endpoint:
+            api/users/subscriptions/
+        """
         queryset = User.objects.filter(author__user=self.request.user)
         serializer = SubscribeSerializer(
             self.paginate_queryset(queryset),
@@ -81,6 +93,9 @@ class UsersViewSet(UserViewSet):
 
 
 class RecipesViewSet(viewsets.ModelViewSet):
+    """Работа с рецептыми, создание, удаление, добавление в избранное
+    и корзину.
+    """
     queryset = Recipes.objects.all()
     permission_classes = (IsAuthorOrAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
@@ -100,6 +115,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
             methods=["POST", "DELETE"],
             permission_classes=[permissions.IsAuthenticated])
     def favorite(self, request, pk):
+        """Функция для добавления и удаления рецепта в/из избранные."""
         user = self.request.user
         if request.method == "POST":
             favorite_recipe = Favorite.objects.filter(
@@ -144,6 +160,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
             methods=["POST", "DELETE"],
             permission_classes=[permissions.IsAuthenticated])
     def shopping_cart(self, request, pk):
+        """Функция добавления рецепта в список покупок."""
         if request.method == "POST":
             return self.add_cart(ShoppingList, request.user, pk)
         if request.method == "DELETE":
@@ -177,6 +194,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
             methods=["GET"],
             permission_classes=[permissions.IsAuthenticated])
     def download_shopping_cart(self, request):
+        """Функция скачивания рецептов из списка покупок."""
         shop_user = request.user
         if not shop_user.shopping_user.exists():
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -202,11 +220,17 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
+    """Класс для работы с тегами.
+    Создание и редактирование доступно только администратору.
+    """
     queryset = Tags.objects.all()
     serializer_class = TagSerializer
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
+    """Класс для работы с ингредиентами.
+    Создание и редактирование доступно только администратору.
+    """
     queryset = Ingredients.objects.all()
     serializer_class = IngredientSerializer
     filter_backends = (DjangoFilterBackend,)

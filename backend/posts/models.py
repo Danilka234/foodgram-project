@@ -48,6 +48,7 @@ class Ingredients(models.Model):
 
 
 class Recipes(models.Model):
+    """Модель рецетов."""
     author = models.ForeignKey(
         User,
         related_name="recipes",
@@ -123,6 +124,7 @@ class AmountOfIngridient(models.Model):
 
 
 class Favorite(models.Model):
+    """Модель с любимыми рецептами."""
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -146,6 +148,7 @@ class Favorite(models.Model):
 
 
 class Subscribe(models.Model):
+    """Подписки для авторов."""
     user = models.ForeignKey(
         User,
         related_name="subscriber",
@@ -171,6 +174,7 @@ class Subscribe(models.Model):
 
 
 class ShoppingList(models.Model):
+    """Модель рецептов помещенных в корзину."""
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

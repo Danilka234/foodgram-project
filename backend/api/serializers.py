@@ -14,6 +14,7 @@ from .validators import ValidationTagIngredient
 
 
 class CreateUserSerializer(UserCreateSerializer):
+    """Сериализатор создания пользователя."""
     is_subscribed = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -36,13 +37,13 @@ class CreateUserSerializer(UserCreateSerializer):
 
 
 class CustomUserSerializer(UserSerializer):
+    """Сериализатор для работы с пользователем."""
     is_subscribed = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        fields = ('id', 'email', "username", 'first_name', 'last_name',
+        fields = ("id", "email", "username", "first_name", "last_name",
                   "is_subscribed")
-        # read_only_fields = ("is_subscribed",)
         validators = [
             UniqueTogetherValidator(
                 queryset=Subscribe.objects.all(),
@@ -82,6 +83,7 @@ class Hex2NameColor(serializers.Field):
 
 
 class Base64ImageField(serializers.ImageField):
+    """Кодировка изображений."""
     def to_internal_value(self, data):
         if isinstance(data, str) and data.startswith('data:image'):
             format, imgstr = data.split(';base64,')
@@ -92,6 +94,7 @@ class Base64ImageField(serializers.ImageField):
 
 
 class TagSerializer(serializers.ModelSerializer):
+    """Сериализатор тэгов, возвращает все поля."""
 
     class Meta:
         model = Tags
@@ -99,6 +102,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
+    """Сериализатор ингредиентов."""
 
     class Meta:
         model = Ingredients
@@ -106,6 +110,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class AmountOfIngridientSerializer(serializers.ModelSerializer):
+    """Сериализатор ингредиентов и их количества в рецетах."""
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredients.objects.all(),
         source='ingredient.id'
@@ -261,13 +266,14 @@ class RecipesPostSerializer(serializers.ModelSerializer):
 
 
 class ShortRecipeSerializer(serializers.ModelSerializer):
+    """Промежуточный сериализатор с рецептами для корзины и избранного."""
     class Meta:
         model = Recipes
         fields = ("id", "name", "image", "cooking_time")
 
 
 class SubscribeSerializer(serializers.ModelSerializer):
-    # не откуда брать данные!!!
+    """Сериализатор для подписок."""
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
     is_subscribed = serializers.SerializerMethodField()

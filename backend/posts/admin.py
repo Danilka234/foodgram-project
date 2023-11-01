@@ -19,4 +19,4 @@ class IngredientsAdmin(admin.ModelAdmin):
 
 @admin.register(Tags)
 class TagsAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("name", "slug", "color")

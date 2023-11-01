@@ -3,6 +3,7 @@ from posts.models import Tags
 
 
 class ValidationTagIngredient:
+    """Проверка данных для тэгов и ингредиентов."""
 
     def tag_validator(tag_input):
         if not tag_input:
