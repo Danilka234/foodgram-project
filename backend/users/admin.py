@@ -1,7 +1,7 @@
 from django.contrib import admin
+from posts.models import Subscribe
 
 from .models import User
-from posts.models import Subscribe
 
 
 @admin.register(User)

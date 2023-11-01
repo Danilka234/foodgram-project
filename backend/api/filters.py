@@ -1,5 +1,4 @@
 from django_filters.rest_framework import FilterSet, filters
-
 from posts.models import Ingredients, Recipes, Tags
 
 
