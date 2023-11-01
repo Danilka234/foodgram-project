@@ -29,7 +29,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 
-# ALLOWED_HOSTS = ["130.193.53.157", "localhost", "tasty-foodgram.hopto.org", "127.0.0.1"]
+ALLOWED_HOSTS = []
+# "130.193.53.157", "localhost", "tasty-foodgram.hopto.org", "127.0.0.1"]
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret')
 
@@ -113,7 +114,7 @@ DJOSER = {
         'user_list': 'api.serializers.CustomUserSerializer',
     },
     'PERMISSIONS': {
-        'user': ['rest_framework.permissions.IsAuthenticated'],
+        'user': ['rest_framework.permissions.AllowAny'],
         'user_list': ['rest_framework.permissions.AllowAny'],
     },
 }

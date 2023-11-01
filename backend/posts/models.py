@@ -56,7 +56,7 @@ class Recipes(models.Model):
     )
     name = models.CharField(
         verbose_name="Название рецепта",
-        max_length=210
+        max_length=200
     )
     description = models.CharField(
         verbose_name="Описание",
@@ -161,6 +161,10 @@ class Subscribe(models.Model):
     created = models.DateTimeField(
         "Дата подписки на автора",
         auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Подписки"
+        verbose_name_plural = "Подписки"
 
     def __str__(self) -> str:
         return f"{self.user} {self.author}"

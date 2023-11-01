@@ -48,7 +48,7 @@ services:
       context: ./infra/
       dockerfile: Dockerfile
     ports:
-      - "8000:80"
+      - "80:80"
     volumes:
       - frontend:/usr/share/nginx/html/
       - redoc:/usr/share/nginx/html/api/docs/
