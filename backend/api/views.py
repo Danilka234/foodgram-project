@@ -215,7 +215,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         today = datetime.today()
         file = f"Список покупок от {today:%Y-%m-%d}.txt"
         response = HttpResponse(shop_list, content_type='text/plain')
-        response['Content-Disposition'] = f'attachment; filename={file}'
+        response["Content-Disposition"] = f"attachment; filename={file}"
         return response
 
 

@@ -128,7 +128,7 @@ class Favorite(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        verbose_name='Пользователь')
+        verbose_name="Пользователь")
     recipe = models.ForeignKey(
         Recipes,
         on_delete=models.CASCADE,
@@ -178,19 +178,19 @@ class ShoppingList(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='shopping_user',
+        related_name="shopping_user",
         null=True,
-        verbose_name='Пользователь')
+        verbose_name="Пользователь")
     recipe = models.ForeignKey(
         Recipes,
         on_delete=models.CASCADE,
-        related_name='shopping_recipe',
-        verbose_name='Покупка')
+        related_name="shopping_recipe",
+        verbose_name="Покупка")
 
     class Meta:
-        verbose_name = 'Покупка'
-        verbose_name_plural = 'Покупки'
-        ordering = ['-id']
+        verbose_name = "Покупка"
+        verbose_name_plural = "Покупки"
+        ordering = ["-id"]
 
     def __str__(self):
         return f"{self.user} {self.recipe}"

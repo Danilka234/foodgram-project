@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
 # "130.193.53.157", "localhost", "tasty-foodgram.hopto.org", "127.0.0.1"]
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret')
