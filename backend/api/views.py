@@ -1,15 +1,12 @@
-from datetime import datetime
-
-from django.db.models import F, Sum
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
-from posts.models import (AmountOfIngridient, Favorite, Ingredients, Recipes,
-                          ShoppingList, Subscribe, Tags)
 from rest_framework import exceptions, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
+from posts.models import (Favorite, Ingredients, Recipes, ShoppingList,
+                          Subscribe, Tags)
 from users.models import User
 
 from .filters import IngredientFilter, RecipeFilter
@@ -18,6 +15,7 @@ from .permissions import IsAuthorOrAdminOrReadOnly
 from .serializers import (IngredientSerializer, RecipesListSerializer,
                           RecipesPostSerializer, ShortRecipeSerializer,
                           SubscribeSerializer, TagSerializer)
+from .utils import download_cart
 
 
 class UsersViewSet(UserViewSet):
@@ -30,14 +28,14 @@ class UsersViewSet(UserViewSet):
         Переопределение пермишена для анонима на endpoint 'api/users/me/'
         """
         if self.action == "me":
-            self.permission_classes = (permissions.IsAuthenticated, )
+            self.permission_classes = (permissions.IsAuthenticated,)
         return super().get_permissions()
 
     @action(
         detail=True,
-        methods=["POST", "DELETE"],
+        methods=("POST", "DELETE"),
         url_path="subscribe",
-        permission_classes=[permissions.IsAuthenticated],
+        permission_classes=(permissions.IsAuthenticated,),
     )
     def subscribe(self, request, id):
         """Подписка для пользователей.
@@ -75,8 +73,8 @@ class UsersViewSet(UserViewSet):
 
     @action(
         detail=False,
-        methods=["GET"],
-        permission_classes=[permissions.IsAuthenticated],
+        methods=("GET",),
+        permission_classes=(permissions.IsAuthenticated,),
     )
     def subscriptions(self, request):
         """Список подписок пользователя.
@@ -101,7 +99,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
     pagination_class = CustomPagination
-    http_method_names = ("get", "post", "patch", "delete")
+    # http_method_names = ("get", "post", "patch", "delete")
 
     def get_serializer_class(self):
         if self.request.method == "GET":
@@ -112,8 +110,8 @@ class RecipesViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
     @action(detail=True,
-            methods=["POST", "DELETE"],
-            permission_classes=[permissions.IsAuthenticated])
+            methods=("POST", "DELETE"),
+            permission_classes=(permissions.IsAuthenticated,))
     def favorite(self, request, pk):
         """Функция для добавления и удаления рецепта в/из избранные."""
         user = self.request.user
@@ -157,8 +155,8 @@ class RecipesViewSet(viewsets.ModelViewSet):
                             )
 
     @action(detail=True,
-            methods=["POST", "DELETE"],
-            permission_classes=[permissions.IsAuthenticated])
+            methods=("POST", "DELETE"),
+            permission_classes=(permissions.IsAuthenticated,))
     def shopping_cart(self, request, pk):
         """Функция добавления рецепта в список покупок."""
         if request.method == "POST":
@@ -191,31 +189,15 @@ class RecipesViewSet(viewsets.ModelViewSet):
                         status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False,
-            methods=["GET"],
-            permission_classes=[permissions.IsAuthenticated])
+            methods=("GET",),
+            permission_classes=(permissions.IsAuthenticated,))
     def download_shopping_cart(self, request):
         """Функция скачивания рецептов из списка покупок."""
         shop_user = request.user
         if not shop_user.shopping_user.exists():
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        ingredients = AmountOfIngridient.objects.filter(
-            recipe__shopping_recipe__user=shop_user
-        ).values(
-            name=F("ingredient__name"),
-            measurement_unit=F("ingredient__measurement_unit")
-        ).annotate(amount=Sum("amount"))
-        shop_list = ("Моя корзина.\n\n")
-        shop_list += "\n".join([
-            f'* {ingredient["name"]} '
-            f'({ingredient["measurement_unit"]})'
-            f' - {ingredient["amount"]}'
-            for ingredient in ingredients
-
-        ])
-        today = datetime.today()
-        file = f"Список покупок от {today:%Y-%m-%d}.txt"
-        response = HttpResponse(shop_list, content_type='text/plain')
-        response["Content-Disposition"] = f"attachment; filename={file}"
+        recipes = Recipes.objects.filter(shopping_recipe__user=shop_user)
+        response = download_cart(recipes)
         return response
 
 

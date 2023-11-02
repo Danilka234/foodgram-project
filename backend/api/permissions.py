@@ -2,8 +2,9 @@ from rest_framework import permissions
 
 
 class IsAuthorOrAdminOrReadOnly(permissions.BasePermission):
-    """Разрешение на получение, редактирование и создании рецептов
-    администраторов, авторов. Остальным только просмотр.
+    """Разрешение на получение, редактирование и создании рецептов,
+    доступных только администраторам и авторам.
+    Остальным доступен только просмотр.
     """
 
     def has_permission(self, request, view):

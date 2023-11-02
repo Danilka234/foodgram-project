@@ -1,4 +1,5 @@
 from django_filters.rest_framework import FilterSet, filters
+
 from posts.models import Ingredients, Recipes, Tags
 
 
@@ -8,7 +9,7 @@ class IngredientFilter(FilterSet):
 
     class Meta:
         model = Ingredients
-        fields = ["name"]
+        fields = ("name",)
 
 
 class RecipeFilter(FilterSet):

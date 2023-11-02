@@ -1,4 +1,6 @@
+from django.core.validators import RegexValidator
 from django.db import models
+
 from users.models import User
 
 
@@ -15,7 +17,13 @@ class Tags(models.Model):
     color = models.CharField(
         verbose_name="Цвет",
         unique=True,
-        max_length=10
+        max_length=7,
+        validators=[
+            RegexValidator(
+                regex=r'^#[0-9A-Fa-f]{6}$',
+                message="Цвет тэга должен быть в формате #RRGGBB!",
+            ),
+        ]
     )
 
     class Meta:
@@ -60,7 +68,7 @@ class Recipes(models.Model):
     )
     description = models.CharField(
         verbose_name="Описание",
-        max_length=300
+        max_length=1500
     )
     tags = models.ManyToManyField(
         Tags,
