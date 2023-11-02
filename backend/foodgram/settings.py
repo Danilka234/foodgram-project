@@ -13,7 +13,7 @@ DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'https://tasty-foodgram.hopto.org/').split(',')
 
-PAGE_SIZE = os.getenv("PAGE_SIZE", 6)
+PAGE_SIZE = os.getenv("PAGE_SIZE", "6")
 
 CSRF_COOKIE_SECURE = True
 
