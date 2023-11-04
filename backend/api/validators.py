@@ -33,8 +33,10 @@ class ValidationTagIngredient:
                 raise ValidationError(
                     "Необходимо добавить хотя бы щепотку игредиента!"
                 )
-            if ingredient_item in ingredient_total:
+            if (ingredient_item["ingredient"] in
+                    [item["ingredient"] for item in ingredient_total]):
                 raise ValidationError(
                     "Ингредиент должен быть уникальным!")
             ingredient_total.append(ingredient_item)
+            print(ingredient_total)
         return ingredient_total
